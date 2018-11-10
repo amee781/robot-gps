@@ -24,10 +24,10 @@
     </button>
   </label>
 
-  <label onclick="check(2)" class="tabbar__item tabbar--top-border__item">
+  <label onclick="check(3)" class="tabbar__item tabbar--top-border__item">
     <input type="radio" name="top-tabbar-b">
     <button class="tabbar__button tabbar--top-border__button">
-      สร้างอัตโนมัติ
+      กำหนดระยะทางวิ่งอัตโนมัติ
     </button>
   </label>
 </div>
@@ -85,6 +85,23 @@
 
 </div>
 
+<div id="box3" style="height: 200px; padding: 1px 0 0 0;display:none">
+
+  <div id="card4" class="card">
+    <ons-row >
+        <div style="text-align: center; margin-top: 30px;">
+            <p>
+              <ons-input id="distance"  placeholder="distance" type="number" min="0" max="100"></ons-input>
+            </p>
+            <div style="margin-top: 30px;text-align: center">
+              <ons-button onclick="selectDistance()">ดำเนินการ</ons-button>
+            </div>
+          </div>
+    </ons-row>
+  </div>
+
+</div>
+
 <ons-dialog onclick="exitAlert()" id="gps-diconnext">
     <div style="text-align: center; padding: 10px;">
       <p id="pgsshow">
@@ -109,12 +126,20 @@
           case 1:
             $("#box1").show();
             $("#box2").hide();
+            $("#box3").hide();
             $("#selectCenter").hide();
           break;
           case 2:
             $("#box1").hide();
             $("#box2").show();
+            $("#box3").hide();
             $("#selectCenter").show();
+          break;
+          case 3:
+            $("#box1").hide();
+            $("#box2").hide();
+            $("#box3").show();
+            $("#selectCenter").hide();
           break;
         }
 
@@ -235,6 +260,12 @@
         $("#selectSend").attr("disabled", "disabled");
       }
 
+      function selectDistance(){
+        var distance = document.getElementById('distance').value;
+        message = new Paho.MQTT.Message('{"mode":"create","type":"line","distance": '+distance+'}');
+        message.destinationName = "ROBOT";
+        client.send(message);
+      }
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4-fRuk9ezMQNj9B3bawmeHQs1Os9_mX8&callback=getLocation"
